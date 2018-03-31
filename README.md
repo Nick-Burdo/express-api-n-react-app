@@ -22,17 +22,23 @@ Edit `/express-react/package,json`:
 ```
   ...
   "scripts": {
-    "start": "PORT=3001 node ./bin/www",
-    "start:watch": "PORT=3001 nodemon node ./bin/www"
+    ...
+    "start:watch": "nodemon node ./bin/www"
   },
   ...  
+```
+
+Change PORT in `/learn-projects/express-react/bin/www`
+
+```
+var port = normalizePort(process.env.PORT || '5000');
 ```
 
 Start server for development:
 
 `$ yarn start:watch`
 
-Explore Express at [http://localhost:3001/users]()
+Explore Express at [http://localhost:5000/users]()
 
 Edit file `/express-react/routes/users.js` to add some data. Then reload
  the browser to view the data.
@@ -52,9 +58,9 @@ From inside the `express-react` folder, create the React app:
 Add to the file `/express-react/client/package.json` for **client ( React)**:
 
 ```
- "proxy": "http://localhost:3001"
+ "proxy": "http://localhost:5000"
  ```
-The port (3001) in the “proxy” line must match the port that your Express
+The port (5000) in the “proxy” line must match the port that your Express
 server is running on.
 
 ### How the Proxy works
@@ -147,8 +153,11 @@ $ git commit -m "Initial commit"
 $ heroku create
 ```
 
+### Deploy the app:
 
-
+```
+$ git push heroku master
+```
 
 ## Sources
 

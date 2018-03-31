@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "PORT=3001 node ./bin/www",
-    "start:watch": "PORT=3001 nodemon node ./bin/www",
+    "start": "node ./bin/www",
+    "start:watch": "nodemon node ./bin/www",
     "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
   },
   "dependencies": {
