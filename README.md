@@ -18,19 +18,19 @@ Enable server restart on file changes: installs Nodemon:
 
 `$ yarn add -D nodemon`
 
-Add to the `package,json` the `"server"` command:
+Edit `/express-react/package,json`:
 ```
+  ...
   "scripts": {
-    ...
-    "server:watch": "PORT=3001 nodemon node ./bin/www",
-    "server": "PORT=3001 node ./bin/www"
+    "start": "PORT=3001 node ./bin/www",
+    "start:watch": "PORT=3001 nodemon node ./bin/www"
   },
   ...  
 ```
 
 Start server for development:
 
-`yarn server:watch`
+`$ yarn start:watch`
 
 Explore Express at [http://localhost:3001/users]()
 
@@ -71,7 +71,7 @@ Start the React development server
 
 `~/express-react/client $ yarn start`
 
-Edit file ``
+Edit file `/express-react/client/src/App.js`
 
 ## Deploy Express & React to production
 
@@ -79,9 +79,51 @@ Way to do this: Express and React files sit on the same machine, and
 Express does double duty: it serves the React files, and it also serves
 API requests.
 
-To deploy used [Heroku](https://dashboard.heroku.com/apps)
+### Set Express to serve React App
+
+Edit file `/express-react/app.js`:
+
+```
+var express = require('express');
+var path = require('path');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var users = require('./routes/users');
+var app = express();
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.use('/users', users);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
+module.exports = app;
+```
+
+Add `"heroku-postbuild"` command to the `"scripts"` in `/express-react/package.json`
+
+```
+...
+  "scripts": {
+    ...
+    "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
+  },
+...
+```
+
+For `npm` use:
+```
+"heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+```
 
 ### Check Heroku-CLI
+
+To deploy used [Heroku](https://dashboard.heroku.com/apps)
 
 ```
 $ heroku --version
@@ -107,4 +149,12 @@ $ heroku create
 
 
 
+
+## Sources
+
+[Dave Ceddia](https://daveceddia.com/):
+
+[Create React App with an Express Backend](https://daveceddia.com/create-react-app-express-backend/?utm_campaign=welcome)
+
+[Create React App with Express in Production](https://daveceddia.com/create-react-app-express-production/)
 

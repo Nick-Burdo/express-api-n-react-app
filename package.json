@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "server:watch": "PORT=3001 nodemon node ./bin/www",
-    "server": "PORT=3001 node ./bin/www"
+    "start": "PORT=3001 node ./bin/www",
+    "start:watch": "PORT=3001 nodemon node ./bin/www",
+    "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
