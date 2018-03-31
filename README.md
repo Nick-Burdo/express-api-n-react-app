@@ -40,8 +40,27 @@ Start server for development:
 
 Explore Express at [http://localhost:5000/users]()
 
-Edit file `/express-react/routes/users.js` to add some data. Then reload
- the browser to view the data.
+Edit file `/express-react/routes/users.js` to add some data:
+
+```
+var express = require('express');
+var router = express.Router();
+
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+  res.json([{
+    id: 1,
+    username: "samsepi0l"
+  }, {
+    id: 2,
+    username: "D0loresH4ze"
+  }]);
+});
+
+module.exports = router;
+```
+
+Then reload the browser to view the data.
 
 ## Create React App
 
