@@ -12,8 +12,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use('/users', users);
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
+
+console.log('NODE_ENV =',process.env.NODE_ENV);
+
+if (process.env.NODE_ENV !== 'development') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  });
+}
 
 module.exports = app;

@@ -1,6 +1,26 @@
-# Express API
+# Express API + React App
 
-## Create Express App
+## tldr
+
+### Development
+
+- Use Express generator to create Express API   :
+- Use create-react-app to create React App in folder `client` of project
+- Use separate local servers to Express API (PORT=3001) & React App (PORT=3000)
+- Use `NODE_ENV=development`, `PORT=3001` & `nodemon` for start Express API server
+- Use `"proxy": "http://localhost:3001"` in `package.json` of React App
+- Use `webpack-dev-server` for React App development (start as usual)
+
+### Production
+
+- Use one server for Express API & React App (Express API as `server` & React App as `client`
+- Use destination folder of React App (`client/build`) as `static` for `server`
+- Use `index.html` of React App (`/client/build/index.html`) as default router's path
+- Use `"heroku-postbuild"` script for build React App after build ExpressAPI
+- Use `Heroky` for deploy
+
+
+## Create Express API
 
 Install Express generator globally:
 
@@ -23,22 +43,16 @@ Edit `/express-react/package,json`:
   ...
   "scripts": {
     ...
-    "start:watch": "nodemon node ./bin/www"
+    "server": "NODE_ENV=development PORT=3001 nodemon node ./bin/www",
   },
   ...  
 ```
 
-Change PORT in `/learn-projects/express-react/bin/www`
-
-```
-var port = normalizePort(process.env.PORT || '5000');
-```
-
 Start server for development:
 
-`$ yarn start:watch`
+`$ yarn server`
 
-Explore Express at [http://localhost:5000/users]()
+Explore Express at [http://localhost:3001/users]()
 
 Edit file `/express-react/routes/users.js` to add some data:
 
@@ -77,9 +91,9 @@ From inside the `express-react` folder, create the React app:
 Add to the file `/express-react/client/package.json` for **client ( React)**:
 
 ```
- "proxy": "http://localhost:5000"
+ "proxy": "http://localhost:3001"
  ```
-The port (5000) in the “proxy” line must match the port that your Express
+The port (3001) in the “proxy” line must match the port that your Express
 server is running on.
 
 ### How the Proxy works
@@ -123,14 +137,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use('/users', users);
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
+
+console.log('NODE_ENV =',process.env.NODE_ENV);
+
+if (process.env.NODE_ENV !== 'development') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  });
+}
 
 module.exports = app;
 ```
 
-Add `"heroku-postbuild"` command to the `"scripts"` in `/express-react/package.json`
+Add `"heroku-postbuild"` command to the `/express-react/package.json`
 
 ```
 ...
